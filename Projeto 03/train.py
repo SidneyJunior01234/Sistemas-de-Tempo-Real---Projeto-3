@@ -3,8 +3,8 @@ import time
 from settings import *
 
 # Criação do semáforo
-semaphore_1 = threading.Semaphore(1)
-semaphore_2 = threading.Semaphore(1)
+#semaphore_1 = threading.Semaphore(1)
+#semaphore_2 = threading.Semaphore(1)
 
 # Criação dos mutexes
 mutex1 = threading.Lock()
@@ -56,12 +56,10 @@ class Train(threading.Thread):
                 #L2
                 #L3
                 if self.x == self.xEnd and self.y == self.yEnd:
-                    semaphore_1.acquire()
+                    mutex1.acquire()
                     mutex2.acquire()
                 #L4
                 if self.x == 200 and self.y == self.yEnd:
-                    mutex1.acquire()
-                    semaphore_1.release()
                     if mutex2.locked():
                         mutex2.release()
                 #L5
@@ -72,65 +70,54 @@ class Train(threading.Thread):
             case "T2":
                 #L6
                 if self.x == self.xStart and self.y == self.yStart:
-                    semaphore_1.acquire()
                     mutex1.acquire()
                 #L5
-                if self.x == self.xEnd and self.y and self.yStart:
-                    if not mutex5.locked():
-                        mutex5.acquire()
-                    semaphore_1.release()
+                if self.x == self.xEnd-TRAIN_WIDTH and self.y and self.yStart:
+                    if not mutex3.locked():
+                        mutex3.acquire()
                     if mutex1.locked():
                         mutex1.release()
                 #L7
                 if self.x == self.xEnd and self.y == self.yEnd:
-                    semaphore_2.acquire()
-                    mutex3.acquire()
-                    if mutex5.locked():
-                        mutex5.release()
-                #L8
-                if self.x == self.xStart and self.y == self.yEnd:
-                    semaphore_2.release()
+                    mutex4.acquire()
                     if mutex3.locked():
                         mutex3.release()
+                #L8
+                if self.x == self.xStart and self.y == self.yEnd:
+                    if mutex4.locked():
+                        mutex4.release()
 
             case "T3":
                 #L9
                 if self.x == self.xEnd and self.y == self.yEnd:
-                    semaphore_2.acquire()
-                    mutex4.acquire() 
+                    mutex5.acquire()
                 #L10
-                if self.x == self.xStart and self.y == self.yEnd:
-                    if not mutex5.locked():
-                        mutex5.acquire()
-                    semaphore_2.release()
-                    if mutex4.locked():
-                        mutex4.release()
-                #L7
-                if self.x == self.xStart and self.y == self.yStart:
-                    semaphore_1.acquire()
-                    mutex2.acquire()
+                if self.x == self.xStart+TRAIN_WIDTH and self.y == self.yEnd:
+                    mutex3.acquire()
                     if mutex5.locked():
                         mutex5.release()
+                #L7
+                if self.x == self.xStart and self.y == self.yStart:
+                    mutex2.acquire()
+                    if mutex3.locked():
+                        mutex3.release()
                 #L4
                 if self.x == self.xEnd and self.y == self.yStart:
-                    semaphore_1.release()
                     if mutex2.locked():
-                        mutex2.release()                   
+                        mutex2.release()
 
             case "T4":
                 #L11
                 if self.x == self.xStart and self.y == self.yStart:
-                    semaphore_2.acquire()
-                    mutex3.acquire()
+                    mutex5.acquire()
+                    mutex4.acquire()
                 #L8
                 if self.x == 200 and self.y == self.yStart:
-                    mutex4.acquire()
-                    semaphore_2.release()
-                    if mutex3.locked():
-                        mutex3.release()
+                   if mutex4.locked():
+                    mutex4.release()
                 #L10
                 if self.x == self.xEnd and self.y == self.yEnd:
-                    if mutex4.locked():
-                        mutex4.release()
+                   if mutex5.locked():
+                    mutex5.release()
                 #L12
                 #L13
